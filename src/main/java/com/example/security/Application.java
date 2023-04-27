@@ -1,7 +1,7 @@
 package com.example.security;
 
 import com.example.security.entities.Role;
-import com.example.security.entities.User;
+import com.example.security.entities.AppUser;
 import com.example.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -25,8 +25,8 @@ public class Application {
             userService.saveRole(new Role(null, "ROLE_USER"));
             userService.saveRole(new Role(null, "ROLE_ADMIN"));
 
-            userService.saveUser(User.builder()
-                    .email("admin")
+            userService.saveUser(AppUser.builder()
+                    .username("admin")
                     .password(passwordEncoder.encode("admin"))
                     .build()
             );

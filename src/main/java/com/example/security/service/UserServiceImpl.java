@@ -1,7 +1,7 @@
 package com.example.security.service;
 
 import com.example.security.entities.Role;
-import com.example.security.entities.User;
+import com.example.security.entities.AppUser;
 import com.example.security.repository.RoleRepository;
 import com.example.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,18 +27,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = getUser(username);
+        AppUser user = getUser(username);
+
+        if (user == null) {
+            log.error("User not found in the database");
+            throw new UsernameNotFoundException("User not found in the database");
+        } else {
+            log.info("User found in the database: {}", username);
+        }
 
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         user.getRoles().forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         });
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
 
     @Override
-    public User saveUser(User user) {
-        log.info("Saving new user {} to the database", user.getEmail());
+    public AppUser saveUser(AppUser user) {
+        log.info("Saving new user {} to the database", user.getUsername());
         return userRepository.save(user);
     }
 
@@ -51,7 +58,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void addRoleToUser(String username, String roleName) {
         log.info("Adding role {} to user {}", roleName, username);
-        User user = getUser(username);
+        AppUser user = getUser(username);
         Role role = roleRepository.findByName(roleName).orElseThrow();
 
         if (user.getRoles() == null) {
@@ -61,14 +68,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User getUser(String username) throws UsernameNotFoundException {
+    public AppUser getUser(String username) throws UsernameNotFoundException {
         log.info("Fetching user {}", username);
-        return userRepository.findByEmail(username)
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<AppUser> getUsers() {
         log.info("Fetching all user");
         return userRepository.findAll();
     }

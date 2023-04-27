@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class RegisteredRequest {
     @JsonProperty("full_name")
     private String fullName;
-    private String email;
+    private String username;
     private String password;
 }

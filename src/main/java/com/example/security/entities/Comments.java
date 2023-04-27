@@ -23,8 +23,8 @@ public class Comments {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "app_user_id")
+    private AppUser appUser;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})

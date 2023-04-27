@@ -34,8 +34,8 @@ public class Article {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "create_by_user_id")
-    private User user;
+    @JoinColumn(name = "create_by_app_user_id")
+    private AppUser appUser;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,

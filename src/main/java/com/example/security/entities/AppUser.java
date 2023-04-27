@@ -14,8 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "_user")
-public class User {
+public class AppUser {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String username;
@@ -27,13 +26,13 @@ public class User {
     private Collection<Role> roles;
 
     @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "user",
+            mappedBy = "appUser",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
     private List<Article> articles;
 
     @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "user",
+            mappedBy = "appUser",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
     private List<Comments> comments;

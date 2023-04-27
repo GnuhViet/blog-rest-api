@@ -4,49 +4,56 @@ import com.example.security.api.model.AuthenticationRequest;
 import com.example.security.api.model.AuthenticationResponse;
 import com.example.security.api.model.RegisteredRequest;
 import com.example.security.constants.Constants;
-import com.example.security.entities.User;
+import com.example.security.entities.AppUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService {
     private final UserService userService;
+    private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisteredRequest request) {
-        User user = User.builder()
+        AppUser user = AppUser.builder()
                 .fullName(request.getFullName())
-                .email(request.getEmail())
+                .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
 
-        User savedUser = userService.saveUser(user);
-        if (savedUser == null) {
-            return AuthenticationResponse.builder().build();
+        try {
+            userService.saveUser(user);
+            userService.addRoleToUser(user.getUsername(), Constants.ROLE_USER);
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
 
-        userService.addRoleToUser(user.getEmail(), Constants.ROLE_USER);
-        String token = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .accessToken(token)
-                .build();
+        return generateToken(request.getUsername());
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        request.getUsername(),
                         request.getPassword()
                 )
         );
 
-        User user = userService.getUser(request.getEmail());
+        return generateToken(request.getUsername());
+    }
+
+    private AuthenticationResponse generateToken(String username) {
+        UserDetails user = userDetailsService.loadUserByUsername(username);
         String token = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .accessToken(token)
