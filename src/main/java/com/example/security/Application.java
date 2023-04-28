@@ -26,12 +26,12 @@ public class Application {
             userService.saveRole(new Role(null, "ROLE_ADMIN"));
 
             userService.saveUser(AppUser.builder()
-                    .username("admin")
-                    .password(passwordEncoder.encode("admin"))
+                    .username("string")
+                    .password(passwordEncoder.encode("string"))
                     .build()
             );
-            userService.addRoleToUser("admin", "ROLE_USER");
-            userService.addRoleToUser("admin", "ROLE_ADMIN");
+            userService.addRoleToUser("string", "ROLE_USER");
+            userService.addRoleToUser("string", "ROLE_ADMIN");
         };
     }
 

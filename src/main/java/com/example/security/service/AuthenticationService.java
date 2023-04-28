@@ -52,11 +52,28 @@ public class AuthenticationService {
         return generateToken(request.getUsername());
     }
 
+    public AuthenticationResponse refreshToken(AuthenticationResponse request) {
+
+        try {
+            final JWTService.DecodedToken refreshToken = jwtService.decodeToken(request.getRefreshToken());
+            UserDetails user = userDetailsService.loadUserByUsername(refreshToken.getUsername());
+            return AuthenticationResponse.builder()
+                    .accessToken(jwtService.generateAccessToken(user))
+                    .refreshToken(request.getRefreshToken())
+                    .build();
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+        }
+
+
+        return AuthenticationResponse.builder().build();
+    }
+
     private AuthenticationResponse generateToken(String username) {
         UserDetails user = userDetailsService.loadUserByUsername(username);
-        String token = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
-                .accessToken(token)
+                .accessToken(jwtService.generateAccessToken(user))
+                .refreshToken(jwtService.generateRefreshToken(user))
                 .build();
     }
 }

@@ -6,14 +6,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.*;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
@@ -47,25 +46,22 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         token = autHeader.substring(TOKEN_START_IDX);
 
-        if (!jwtService.isTokenValid(token)) {
-            filterChain.doFilter(request, response);
-            return;
+        try {
+            JWTService.DecodedToken decodedToken = jwtService.decodeToken(token);
+            if (decodedToken.getUsername() == null || decodedToken.getRoles() == null) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            Arrays.stream(decodedToken.getRoles()).forEach(role -> {
+                authorities.add(new SimpleGrantedAuthority(role));
+            });
+            Authentication authenticationToken = new UsernamePasswordAuthenticationToken(decodedToken.getUsername(), null, authorities);
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
-
-        String username = jwtService.extractUsername(token);
-        String[] roles = jwtService.extractRoles(token);
-
-        if (username == null || roles == null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        Arrays.stream(roles).forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role));
-        });
-        Authentication authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         filterChain.doFilter(request, response);
     }
