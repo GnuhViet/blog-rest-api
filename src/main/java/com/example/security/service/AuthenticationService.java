@@ -6,6 +6,7 @@ import com.example.security.api.domain.authentication.RefreshRequest;
 import com.example.security.api.domain.authentication.RegisteredRequest;
 import com.example.security.constants.Constants;
 import com.example.security.entities.AppUser;
+import com.example.security.exception.RegisterException;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -29,8 +34,11 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisteredRequest request) throws AuthenticationException {
+
         if (userService.existByUsername(request.getUsername())) {
-            throw new BadCredentialsException("register credentials conflict");
+            BindingResult bindingResult = new BeanPropertyBindingResult(request, "registeredRequest");
+            bindingResult.rejectValue("username", "username.exists", "Username already exists");
+            throw new RegisterException("register credentials conflict", bindingResult);
         }
 
         AppUser user = AppUser.builder()

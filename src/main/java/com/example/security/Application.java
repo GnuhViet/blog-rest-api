@@ -1,7 +1,7 @@
 package com.example.security;
 
-import com.example.security.entities.Role;
 import com.example.security.entities.AppUser;
+import com.example.security.entities.Role;
 import com.example.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;

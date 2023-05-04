@@ -1,7 +1,7 @@
 package com.example.security.service;
 
-import com.example.security.entities.Role;
 import com.example.security.entities.AppUser;
+import com.example.security.entities.Role;
 import com.example.security.repository.RoleRepository;
 import com.example.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
