@@ -3,6 +3,7 @@ package com.example.security.api.domain.authentication;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,8 +17,14 @@ public class RegisteredRequest {
     @JsonProperty("full_name")
     @NotBlank(message = "Full name is mandatory")
     private String fullName;
+
+    @Pattern(regexp = "^[a-zA-Z0-9_]{6,}$",
+            message = "username must be min 5 character and not containing special character")
     @NotBlank(message = "Username is mandatory")
     private String username;
-    @NotBlank(message = "Email is mandatory")
+
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{4,12}$",
+            message = "password must be min 4 and max 12 length containing at least 1 uppercase, 1 lowercase, 1 special character and 1 digit")
+    @NotBlank(message = "Password is mandatory")
     private String password;
 }
