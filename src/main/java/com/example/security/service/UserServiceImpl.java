@@ -79,5 +79,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         log.info("Fetching all user");
         return userRepository.findAll();
     }
+
+    @Override
+    public boolean existByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean existByEmail() {
+        return false;
+    }
+
+    @Override
+    public boolean existByPhone() {
+        return false;
+    }
 }
 

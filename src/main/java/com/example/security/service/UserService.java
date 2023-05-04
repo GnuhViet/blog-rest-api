@@ -11,4 +11,7 @@ public interface UserService {
     void addRoleToUser(String username, String roleName);
     AppUser getUser(String username);
     List<AppUser> getUsers();
+    boolean existByUsername(String username);
+    boolean existByEmail();
+    boolean existByPhone();
 }

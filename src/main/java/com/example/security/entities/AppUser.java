@@ -17,10 +17,13 @@ import java.util.List;
 public class AppUser {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    @Column(unique = true)
     private String username;
+    @Column(unique = true)
     private String email;
     private String fullName;
     private String password;
+    @Column(unique = true)
     private String phoneNumber;
     @ManyToMany(fetch =  FetchType.EAGER)
     private Collection<Role> roles;

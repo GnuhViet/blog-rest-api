@@ -1,14 +1,18 @@
 package com.example.security.service;
 
-import com.example.security.api.model.AuthenticationRequest;
-import com.example.security.api.model.AuthenticationResponse;
-import com.example.security.api.model.RegisteredRequest;
+import com.example.security.api.domain.authentication.AuthenticationRequest;
+import com.example.security.api.domain.authentication.AuthenticationResponse;
+import com.example.security.api.domain.authentication.RefreshRequest;
+import com.example.security.api.domain.authentication.RegisteredRequest;
 import com.example.security.constants.Constants;
 import com.example.security.entities.AppUser;
+import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +28,11 @@ public class AuthenticationService {
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisteredRequest request) {
+    public AuthenticationResponse register(RegisteredRequest request) throws AuthenticationException {
+        if (userService.existByUsername(request.getUsername())) {
+            throw new BadCredentialsException("register credentials conflict");
+        }
+
         AppUser user = AppUser.builder()
                 .fullName(request.getFullName())
                 .username(request.getUsername())
@@ -41,7 +49,7 @@ public class AuthenticationService {
         return generateToken(request.getUsername());
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request) throws AuthenticationException {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -52,21 +60,14 @@ public class AuthenticationService {
         return generateToken(request.getUsername());
     }
 
-    public AuthenticationResponse refreshToken(AuthenticationResponse request) {
+    public AuthenticationResponse refreshToken(RefreshRequest request) throws MalformedJwtException {
 
-        try {
-            final JWTService.DecodedToken refreshToken = jwtService.decodeToken(request.getRefreshToken());
-            UserDetails user = userDetailsService.loadUserByUsername(refreshToken.getUsername());
-            return AuthenticationResponse.builder()
-                    .accessToken(jwtService.generateAccessToken(user))
-                    .refreshToken(request.getRefreshToken())
-                    .build();
-        } catch (Exception ex) {
-            log.error(ex.getMessage());
-        }
-
-
-        return AuthenticationResponse.builder().build();
+        final JWTService.DecodedToken refreshToken = jwtService.decodeToken(request.getRefreshToken());
+        UserDetails user = userDetailsService.loadUserByUsername(refreshToken.getUsername());
+        return AuthenticationResponse.builder()
+                .accessToken(jwtService.generateAccessToken(user))
+                .refreshToken(request.getRefreshToken())
+                .build();
     }
 
     private AuthenticationResponse generateToken(String username) {

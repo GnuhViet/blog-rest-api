@@ -1,9 +1,11 @@
 package com.example.security.api;
 
-import com.example.security.api.model.AuthenticationRequest;
-import com.example.security.api.model.AuthenticationResponse;
-import com.example.security.api.model.RegisteredRequest;
+import com.example.security.api.domain.authentication.AuthenticationRequest;
+import com.example.security.api.domain.authentication.AuthenticationResponse;
+import com.example.security.api.domain.authentication.RefreshRequest;
+import com.example.security.api.domain.authentication.RegisteredRequest;
 import com.example.security.service.AuthenticationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,17 +20,17 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisteredRequest request) {
+    public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody RegisteredRequest request) {
         return ResponseEntity.ok(authenticationService.register(request));
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> authenticate(@Valid @RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationResponse request) {
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody RefreshRequest request) {
         return ResponseEntity.ok(authenticationService.refreshToken(request));
     }
 }

@@ -47,8 +47,11 @@ public class JWTService {
         private DecodedToken(Claims claims) throws MalformedJwtException {
             this.claims = claims;
 
+            @SuppressWarnings("unchecked")
+            List<String> rawRoles = (List<String>) claims.get("roles");
+
             username = claims.getSubject();
-            roles = claims.get("roles", String[].class);
+            roles = rawRoles.toArray(new String[0]);
             expiration = claims.getExpiration();
             issuer = claims.getIssuer();
             issuerAt = claims.getIssuedAt();
