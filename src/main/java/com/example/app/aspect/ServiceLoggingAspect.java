@@ -20,16 +20,15 @@ public class ServiceLoggingAspect {
             pointcut = "com.example.app.aspect.ServiceAopExpression.forUserService()",
             returning = "res"
     )
-    public void afterReturningFindAccountAdvice(JoinPoint joinPoint, Object res) {
+    public void afterReturningUserService(JoinPoint joinPoint, Object res) {
         log.info("Method: " + joinPoint.getSignature().toString() + " executed, return: " + res);
     }
 
     @Before("com.example.app.aspect.ServiceAopExpression.forUserService()")
-    public void beforeAddAccountAdvice(JoinPoint joinPoint) {
+    public void beforeUserService(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
-
         log.info("Method: " + joinPoint.getSignature().toString() + " called with args: " + Arrays.toString(args));
-
-
     }
+
+
 }

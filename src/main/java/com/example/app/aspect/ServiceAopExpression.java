@@ -7,4 +7,10 @@ import org.aspectj.lang.annotation.Pointcut;
 public class ServiceAopExpression {
     @Pointcut("execution(* com.example.app.service.UserService.*(..))")
     public void forUserService() {}
+
+    @Pointcut("execution(* com.example.app.service.AuthenticationService.register())")
+    public void forAuthServiceRegister() {}
+
+    @Pointcut("execution(* com.example.app.service.AuthenticationService.authenticate())")
+    public void forAuthServiceAuthenticate() {}
 }
