@@ -32,6 +32,13 @@ public class Application {
             );
             userService.addRoleToUser("string", "ROLE_USER");
             userService.addRoleToUser("string", "ROLE_ADMIN");
+
+            userService.saveUser(AppUser.builder()
+                    .username("user")
+                    .password(passwordEncoder.encode("string"))
+                    .build()
+            );
+            userService.addRoleToUser("user", "ROLE_USER");
         };
     }
 
