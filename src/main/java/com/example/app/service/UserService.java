@@ -6,7 +6,6 @@ import com.example.app.repository.RoleRepository;
 import com.example.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -79,6 +78,10 @@ public class UserService implements UserDetailsService {
         // log.info("Fetching all user");
         List<AppUser> res = userRepository.findAll(page).getContent();
         return res;
+    }
+
+    public long countUser() {
+        return userRepository.count();
     }
 
     public boolean existByUsername(String username) {

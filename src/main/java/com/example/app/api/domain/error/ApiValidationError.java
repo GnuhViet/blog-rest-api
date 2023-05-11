@@ -1,4 +1,4 @@
-package com.example.app.api.error;
+package com.example.app.api.domain.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

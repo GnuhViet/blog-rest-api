@@ -1,6 +1,7 @@
-package com.example.app.api.error;
+package com.example.app.api.domain.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
@@ -14,7 +15,9 @@ public class ApiError {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime timestamp;
     private String message;
+    @JsonProperty("debug_message")
     private String debugMessage;
+    @JsonProperty("sub_errors")
     private List<ApiSubError> subErrors;
 
     public ApiError() {
