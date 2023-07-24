@@ -1,11 +1,13 @@
 package com.example.app.service;
 
+import com.example.app.dto.AppUserDto;
 import com.example.app.entities.AppUser;
 import com.example.app.entities.Role;
 import com.example.app.repository.RoleRepository;
 import com.example.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,13 +28,14 @@ import java.util.List;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AppUser user = getUser(username);
+        AppUser user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         if (user == null) {
-            // log.error("User not found in the database");
             throw new UsernameNotFoundException("User not found in the database");
         }
 
@@ -42,8 +46,12 @@ public class UserService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
 
+    private AppUser getUser(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
     public AppUser saveUser(AppUser user) {
-        // log.info("Saving new user {} to the database", user.getUsername());
         return userRepository.save(user);
     }
 
@@ -53,7 +61,6 @@ public class UserService implements UserDetailsService {
     }
 
     public void addRoleToUser(String username, String roleName) {
-        // log.info("Adding role {} to user {}", roleName, username);
         AppUser user = getUser(username);
         Role role = roleRepository.findByName(roleName).orElseThrow();
 
@@ -63,21 +70,19 @@ public class UserService implements UserDetailsService {
         user.getRoles().add(role);
     }
 
-    public AppUser getUser(String username) throws UsernameNotFoundException {
-        // log.info("Fetching user {}", username);
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public List<AppUserDto> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(obj -> modelMapper.map(obj, AppUserDto.class))
+                .collect(Collectors.toList());
     }
 
-    public List<AppUser> getAllUsers() {
-        // log.info("Fetching all user");
-        return userRepository.findAll();
-    }
-
-    public List<AppUser> getAllUsers(Pageable page) {
-        // log.info("Fetching all user");
+    public List<AppUserDto> getAllUsers(Pageable page) {
         List<AppUser> res = userRepository.findAll(page).getContent();
-        return res;
+        return userRepository.findAll(page).getContent()
+                .stream()
+                .map(obj -> modelMapper.map(obj, AppUserDto.class))
+                .collect(Collectors.toList());
     }
 
     public long countUser() {

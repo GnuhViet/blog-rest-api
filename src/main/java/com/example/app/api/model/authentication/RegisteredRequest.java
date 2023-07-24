@@ -1,4 +1,4 @@
-package com.example.app.api.domain.authentication;
+package com.example.app.api.model.authentication;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisteredRequest {
-    @JsonProperty("full_name")
+    @JsonProperty("fullName")
     @NotBlank(message = "Full name is mandatory")
     private String fullName;
 

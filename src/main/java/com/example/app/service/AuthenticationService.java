@@ -1,9 +1,9 @@
 package com.example.app.service;
 
-import com.example.app.api.domain.authentication.AuthenticationRequest;
-import com.example.app.api.domain.authentication.AuthenticationResponse;
-import com.example.app.api.domain.authentication.RefreshRequest;
-import com.example.app.api.domain.authentication.RegisteredRequest;
+import com.example.app.api.model.authentication.AuthenticationRequest;
+import com.example.app.api.model.authentication.AuthenticationResponse;
+import com.example.app.api.model.authentication.RefreshRequest;
+import com.example.app.api.model.authentication.RegisteredRequest;
 import com.example.app.constants.Constants;
 import com.example.app.entities.AppUser;
 import com.example.app.exception.RegisterExceptionBuilder;

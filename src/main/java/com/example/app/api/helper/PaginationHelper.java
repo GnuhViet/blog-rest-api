@@ -1,7 +1,7 @@
 package com.example.app.api.helper;
 
-import com.example.app.api.domain.paging.PagedResponse;
-import com.example.app.api.domain.paging.PaginationRequest;
+import com.example.app.api.model.paging.PagedResponse;
+import com.example.app.api.model.paging.PaginationRequest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

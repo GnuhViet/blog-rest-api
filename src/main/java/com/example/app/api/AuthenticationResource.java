@@ -1,9 +1,9 @@
 package com.example.app.api;
 
-import com.example.app.api.domain.authentication.AuthenticationRequest;
-import com.example.app.api.domain.authentication.AuthenticationResponse;
-import com.example.app.api.domain.authentication.RefreshRequest;
-import com.example.app.api.domain.authentication.RegisteredRequest;
+import com.example.app.api.model.authentication.AuthenticationRequest;
+import com.example.app.api.model.authentication.AuthenticationResponse;
+import com.example.app.api.model.authentication.RefreshRequest;
+import com.example.app.api.model.authentication.RegisteredRequest;
 import com.example.app.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

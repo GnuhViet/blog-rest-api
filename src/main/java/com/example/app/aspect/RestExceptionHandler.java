@@ -1,7 +1,7 @@
 package com.example.app.aspect;
 
-import com.example.app.api.domain.error.ApiError;
-import com.example.app.api.domain.error.ApiValidationError;
+import com.example.app.api.model.error.ApiError;
+import com.example.app.api.model.error.ApiValidationError;
 import com.example.app.exception.RegisterException;
 import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.core.Ordered;

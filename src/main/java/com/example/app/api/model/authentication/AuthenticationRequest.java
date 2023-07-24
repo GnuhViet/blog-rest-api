@@ -1,4 +1,4 @@
-package com.example.app.api.domain.authentication;
+package com.example.app.api.model.authentication;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
