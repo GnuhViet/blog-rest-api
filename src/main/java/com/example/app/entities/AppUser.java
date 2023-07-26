@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,6 +25,7 @@ public class AppUser {
     private String email;
     private String fullName;
     private String password;
+    private String avatar;
     @Column(unique = true)
     private String phoneNumber;
     @ManyToMany(fetch =  FetchType.EAGER)

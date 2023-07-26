@@ -1,10 +1,12 @@
 package com.example.app.service;
 
+import com.example.app.api.model.user.UserProfileRequest;
 import com.example.app.dto.AppUserDto;
 import com.example.app.entities.AppUser;
 import com.example.app.entities.Role;
 import com.example.app.repository.RoleRepository;
 import com.example.app.repository.UserRepository;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +35,8 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Objects.requireNonNull(username, "Username must not be null");
+
         AppUser user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
@@ -46,22 +51,50 @@ public class UserService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
 
-    private AppUser getUser(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
+    private AppUser loadAppUserByUsername(String username) throws UsernameNotFoundException {
+        Objects.requireNonNull(username, "Username must not be null");
+
+        AppUser user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found in the database");
+        }
+
+        return user;
     }
 
-    public AppUser saveUser(AppUser user) {
-        return userRepository.save(user);
+    public AppUserDto getUserDto(String username) {
+        return modelMapper.map(loadAppUserByUsername(username), AppUserDto.class);
+    }
+
+    public AppUserDto saveUser(AppUser user) {
+        Objects.requireNonNull(user, "User must not be null");
+
+        return modelMapper.map(userRepository.save(user), AppUserDto.class);
+    }
+
+    public AppUserDto updateUserProfile(UserProfileRequest userProfile, String username) {
+        Objects.requireNonNull(userProfile, "Profile must not be null");
+        Objects.requireNonNull(username, "Username must not be null");
+        AppUser user = loadAppUserByUsername(username);
+        modelMapper.map(userProfile, user);
+        return modelMapper.map(user, AppUserDto.class);
     }
 
     public Role saveRole(Role role) {
         // log.info("Saving new role {} to the database", role.getName());
+        Objects.requireNonNull(role, "Role must not be null");
+
         return roleRepository.save(role);
     }
 
     public void addRoleToUser(String username, String roleName) {
-        AppUser user = getUser(username);
+        Objects.requireNonNull(username, "Username must not be null");
+        Objects.requireNonNull(roleName, "Role name must not be null");
+
+
+        AppUser user = loadAppUserByUsername(username);
         Role role = roleRepository.findByName(roleName).orElseThrow();
 
         if (user.getRoles() == null) {

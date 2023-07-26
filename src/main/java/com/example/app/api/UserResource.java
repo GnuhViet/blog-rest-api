@@ -3,6 +3,7 @@ package com.example.app.api;
 import com.example.app.api.model.paging.PagedResponse;
 import com.example.app.api.model.paging.PaginationRequest;
 import com.example.app.api.helper.PaginationHelper;
+import com.example.app.api.model.user.UserProfileRequest;
 import com.example.app.constants.Constants;
 import com.example.app.dto.AppUserDto;
 import com.example.app.service.UserService;
@@ -14,10 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.stream.Collectors;
 
 @RestController
@@ -43,11 +43,29 @@ public class UserResource {
     }
 
     @GetMapping("/profile")
-    @Secured(Constants.ROLE_USER)
-    @Operation(summary = "List user, Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<AppUserDto> getProfile() {
+    @Secured({Constants.ROLE_USER, Constants.ROLE_ADMIN})
+    @Operation(summary = "User profile, Role: All", security = @SecurityRequirement(name = "bearerAuth"))
+    public ResponseEntity<AppUserDto> getProfile(Principal principal) {
+        return ResponseEntity.ok(
+                userService.getUserDto(principal.getName())
+        );
+    }
 
-        throw new UnsupportedOperationException();
+    @PostMapping("/profile")
+    @Secured({Constants.ROLE_USER, Constants.ROLE_ADMIN})
+    @Operation(summary = "User profile, Role: All", security = @SecurityRequirement(name = "bearerAuth"))
+    public ResponseEntity<AppUserDto> editProfile(@RequestBody UserProfileRequest userProfile, Principal principal) {
+        return ResponseEntity.ok(
+                userService.updateUserProfile(userProfile, principal.getName())
+        );
+    }
 
+    @PostMapping("/profile/change-password")
+    @Secured({Constants.ROLE_USER, Constants.ROLE_ADMIN})
+    @Operation(summary = "User profile, Role: All", security = @SecurityRequirement(name = "bearerAuth"))
+    public ResponseEntity<AppUserDto> changePassword(@RequestBody UserProfileRequest userProfile, Principal principal) {
+        return ResponseEntity.ok(
+                userService.updateUserProfile(userProfile, principal.getName())
+        );
     }
 }
