@@ -3,9 +3,11 @@ package com.example.app.api;
 import com.example.app.api.model.paging.PagedResponse;
 import com.example.app.api.model.paging.PaginationRequest;
 import com.example.app.api.helper.PaginationHelper;
+import com.example.app.api.model.user.ChangePasswordRequest;
 import com.example.app.api.model.user.UserProfileRequest;
 import com.example.app.constants.Constants;
 import com.example.app.dto.AppUserDto;
+import com.example.app.service.AuthenticationService;
 import com.example.app.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserResource {
     private final UserService userService;
+    private final AuthenticationService authenticationService;
     private final ModelMapper modelMapper;
 
     @GetMapping
@@ -54,18 +57,17 @@ public class UserResource {
     @PostMapping("/profile")
     @Secured({Constants.ROLE_USER, Constants.ROLE_ADMIN})
     @Operation(summary = "User profile, Role: All", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<AppUserDto> editProfile(@RequestBody UserProfileRequest userProfile, Principal principal) {
+    public ResponseEntity<AppUserDto> editProfile(@RequestBody UserProfileRequest request, Principal principal) {
         return ResponseEntity.ok(
-                userService.updateUserProfile(userProfile, principal.getName())
+                userService.updateUserProfile(request, principal.getName())
         );
     }
 
     @PostMapping("/profile/change-password")
     @Secured({Constants.ROLE_USER, Constants.ROLE_ADMIN})
     @Operation(summary = "User profile, Role: All", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<AppUserDto> changePassword(@RequestBody UserProfileRequest userProfile, Principal principal) {
-        return ResponseEntity.ok(
-                userService.updateUserProfile(userProfile, principal.getName())
-        );
+    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequest request, Principal principal) {
+        authenticationService.changePassword(request, principal.getName());
+        return ResponseEntity.noContent().build();
     }
 }

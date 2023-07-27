@@ -4,6 +4,7 @@ import com.example.app.api.model.authentication.AuthenticationRequest;
 import com.example.app.api.model.authentication.AuthenticationResponse;
 import com.example.app.api.model.authentication.RefreshRequest;
 import com.example.app.api.model.authentication.RegisteredRequest;
+import com.example.app.api.model.user.ChangePasswordRequest;
 import com.example.app.constants.Constants;
 import com.example.app.entities.AppUser;
 import com.example.app.exception.RegisterExceptionBuilder;
@@ -76,6 +77,17 @@ public class AuthenticationService {
                 .accessToken(jwtService.generateAccessToken(user))
                 .refreshToken(request.getRefreshToken())
                 .build();
+    }
+
+    public void changePassword(ChangePasswordRequest request, String username) throws AuthenticationException {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        username,
+                        request.getOldPassword()
+                )
+        );
+
+        userService.updateUserPassword(passwordEncoder.encode(request.getNewPassword()), username);
     }
 
     private AuthenticationResponse generateToken(String username) {

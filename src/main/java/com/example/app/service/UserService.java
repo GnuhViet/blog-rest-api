@@ -6,7 +6,6 @@ import com.example.app.entities.AppUser;
 import com.example.app.entities.Role;
 import com.example.app.repository.RoleRepository;
 import com.example.app.repository.UserRepository;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -79,6 +78,14 @@ public class UserService implements UserDetailsService {
         Objects.requireNonNull(username, "Username must not be null");
         AppUser user = loadAppUserByUsername(username);
         modelMapper.map(userProfile, user);
+        return modelMapper.map(user, AppUserDto.class);
+    }
+
+    public AppUserDto updateUserPassword(String newPassword, String username) {
+        Objects.requireNonNull(newPassword, "Password must not be null");
+        Objects.requireNonNull(username, "Username must not be null");
+        AppUser user = loadAppUserByUsername(username);
+        user.setPassword(newPassword);
         return modelMapper.map(user, AppUserDto.class);
     }
 
