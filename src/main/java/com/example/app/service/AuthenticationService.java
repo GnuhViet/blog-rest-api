@@ -7,7 +7,7 @@ import com.example.app.api.model.authentication.RegisteredRequest;
 import com.example.app.api.model.user.ChangePasswordRequest;
 import com.example.app.constants.Constants;
 import com.example.app.entities.AppUser;
-import com.example.app.exception.RegisterExceptionBuilder;
+import com.example.app.exception.authentication.RegisterExceptionBuilder;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +35,7 @@ public class AuthenticationService {
         if (userService.existByUsername(request.getUsername())) {
             exceptionBuilder.addFieldError("username", "username.exists", "Username already exists");
         }
+        // if exist by email...
 
         if (!exceptionBuilder.isEmptyError()) {
             throw exceptionBuilder

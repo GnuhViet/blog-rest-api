@@ -52,5 +52,5 @@ public class Article {
             mappedBy = "article",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
-    private List<Comments> comments;
+    private List<Comment> comments;
 }

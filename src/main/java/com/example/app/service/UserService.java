@@ -1,7 +1,7 @@
 package com.example.app.service;
 
 import com.example.app.api.model.user.UserProfileRequest;
-import com.example.app.dto.AppUserDto;
+import com.example.app.dto.appuser.DetailsAppUserDTO;
 import com.example.app.entities.AppUser;
 import com.example.app.entities.Role;
 import com.example.app.repository.RoleRepository;
@@ -63,30 +63,30 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public AppUserDto getUserDto(String username) {
-        return modelMapper.map(loadAppUserByUsername(username), AppUserDto.class);
+    public <T> T getUserDto(String username, Class<T> dtoType) {
+        return modelMapper.map(loadAppUserByUsername(username), dtoType);
     }
 
-    public AppUserDto saveUser(AppUser user) {
+    public DetailsAppUserDTO saveUser(AppUser user) {
         Objects.requireNonNull(user, "User must not be null");
 
-        return modelMapper.map(userRepository.save(user), AppUserDto.class);
+        return modelMapper.map(userRepository.save(user), DetailsAppUserDTO.class);
     }
 
-    public AppUserDto updateUserProfile(UserProfileRequest userProfile, String username) {
+    public DetailsAppUserDTO updateUserProfile(UserProfileRequest userProfile, String username) {
         Objects.requireNonNull(userProfile, "Profile must not be null");
         Objects.requireNonNull(username, "Username must not be null");
         AppUser user = loadAppUserByUsername(username);
         modelMapper.map(userProfile, user);
-        return modelMapper.map(user, AppUserDto.class);
+        return modelMapper.map(user, DetailsAppUserDTO.class);
     }
 
-    public AppUserDto updateUserPassword(String newPassword, String username) {
+    public DetailsAppUserDTO updateUserPassword(String newPassword, String username) {
         Objects.requireNonNull(newPassword, "Password must not be null");
         Objects.requireNonNull(username, "Username must not be null");
         AppUser user = loadAppUserByUsername(username);
         user.setPassword(newPassword);
-        return modelMapper.map(user, AppUserDto.class);
+        return modelMapper.map(user, DetailsAppUserDTO.class);
     }
 
     public Role saveRole(Role role) {
@@ -110,18 +110,18 @@ public class UserService implements UserDetailsService {
         user.getRoles().add(role);
     }
 
-    public List<AppUserDto> getAllUsers() {
+    public List<DetailsAppUserDTO> getAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(obj -> modelMapper.map(obj, AppUserDto.class))
+                .map(obj -> modelMapper.map(obj, DetailsAppUserDTO.class))
                 .collect(Collectors.toList());
     }
 
-    public List<AppUserDto> getAllUsers(Pageable page) {
+    public <T> List<T> getAllUsers(Pageable page, Class<T> dtoType) {
         List<AppUser> res = userRepository.findAll(page).getContent();
         return userRepository.findAll(page).getContent()
                 .stream()
-                .map(obj -> modelMapper.map(obj, AppUserDto.class))
+                .map(obj -> modelMapper.map(obj, dtoType))
                 .collect(Collectors.toList());
     }
 

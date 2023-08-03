@@ -4,6 +4,7 @@ import com.example.app.filter.JWTAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -58,6 +59,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests()
                 .requestMatchers(AUTH_WHITELIST).permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/v1/category").permitAll()
                 .anyRequest().authenticated();
 
 

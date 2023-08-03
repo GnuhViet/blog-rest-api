@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +26,7 @@ public class AppUser {
     private String avatar;
     @Column(unique = true)
     private String phoneNumber;
-    @ManyToMany(fetch =  FetchType.EAGER)
+    @ManyToMany(fetch =  FetchType.LAZY)
     private Collection<Role> roles;
 
     @OneToMany(fetch = FetchType.LAZY,
@@ -41,5 +39,5 @@ public class AppUser {
             mappedBy = "appUser",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
-    private List<Comments> comments;
+    private List<Comment> comments;
 }

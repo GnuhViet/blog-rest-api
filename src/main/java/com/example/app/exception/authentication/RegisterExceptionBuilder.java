@@ -1,4 +1,4 @@
-package com.example.app.exception;
+package com.example.app.exception.authentication;
 
 import lombok.Getter;
 import org.springframework.validation.BeanPropertyBindingResult;

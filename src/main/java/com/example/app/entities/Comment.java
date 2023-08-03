@@ -11,7 +11,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Comments {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

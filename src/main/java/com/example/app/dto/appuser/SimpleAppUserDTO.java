@@ -1,4 +1,4 @@
-package com.example.app.dto;
+package com.example.app.dto.appuser;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppUserDto {
+public class SimpleAppUserDTO {
     private String id;
     private String username;
     private String fullName;
-    private String email;
-    private String phoneNumber;
-    private String avatar;
 }
