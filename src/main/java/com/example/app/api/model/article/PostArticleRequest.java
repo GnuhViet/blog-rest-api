@@ -21,5 +21,5 @@ public class PostArticleRequest {
     private String thumbnail;
     private String shortDescription;
     private String content;
-    private List<String> category; //TODO
+    private List<String> categoryIds; //TODO
 }

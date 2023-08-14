@@ -21,6 +21,10 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
 
+    public Category findById(String id) {
+        return categoryRepository.findById(id).orElseThrow(() -> new CategoryException("Wrong id ?"));
+    }
+
     public CategoryDTO save(String name) {
         if (categoryRepository.existsByName(name)) {
             throw new CategoryException("This category is already exist");

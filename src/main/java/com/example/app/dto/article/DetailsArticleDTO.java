@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.util.List;
 
 @Data
 @Builder
@@ -20,4 +21,6 @@ public class DetailsArticleDTO {
     private String thumbnail;
     private String shortDescription;
     private Date createDate;
+    private List<String> categoryIds;
+    private String authorId;
 }

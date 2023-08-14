@@ -67,6 +67,14 @@ public class UserService implements UserDetailsService {
         return modelMapper.map(loadAppUserByUsername(username), dtoType);
     }
 
+    public String getUserid(String username) {
+        return loadAppUserByUsername(username).getId();
+    }
+
+    public AppUser getReferenceById(String id) {
+        return userRepository.getReferenceById(id);
+    }
+
     public DetailsAppUserDTO saveUser(AppUser user) {
         Objects.requireNonNull(user, "User must not be null");
 
