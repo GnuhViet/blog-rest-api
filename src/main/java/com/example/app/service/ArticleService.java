@@ -4,7 +4,7 @@ import com.example.app.api.model.article.PostArticleRequest;
 import com.example.app.dto.article.DetailsArticleDTO;
 import com.example.app.entities.Article;
 import com.example.app.entities.Category;
-import com.example.app.repository.article.ArticleRepository;
+import com.example.app.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -72,7 +72,7 @@ public class ArticleService {
         // article.setAppUser(AppUser.builder().id("e941be77-8f42-44ef-90e0-b5e22cde3123").build()); // lam nhu nay se mat het thong tin cua user id nay
 
         Article savedArticle = articleRepository.save(article);
-        articleRepository.setCreateByAppUserId(savedArticle.getId(), userService.getUserid(username));
+        // articleRepository.setCreateByAppUserId(savedArticle.getId(), userService.getUserid(username));
 
         DetailsArticleDTO response = modelMapper.map(savedArticle, DetailsArticleDTO.class);
         response.setCategoryIds(request.getCategoryIds());
