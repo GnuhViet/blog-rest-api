@@ -1,5 +1,7 @@
 package com.example.app.service;
 
+import com.example.app.dto.appuser.DetailsAppUserDTO;
+import com.example.app.entities.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -8,8 +10,6 @@ import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -39,25 +39,27 @@ public class JWTService {
     }
 
     public class DecodedToken {
-        @Getter private final String username;
+        @Getter private final String userId;
         @Getter private final String[] roles;
         @Getter private final Date expiration;
         @Getter private final String issuer;
         @Getter private final Date issuerAt;
 
-        private final Claims claims;
-
         private DecodedToken(Claims claims) throws MalformedJwtException {
-            this.claims = claims;
 
             @SuppressWarnings("unchecked")
             List<String> rawRoles = (List<String>) claims.get("roles");
 
-            username = claims.getSubject();
-            roles = rawRoles.toArray(new String[0]);
+            userId = claims.getSubject();
             expiration = claims.getExpiration();
             issuer = claims.getIssuer();
             issuerAt = claims.getIssuedAt();
+
+            if (rawRoles != null) {
+                roles = rawRoles.toArray(new String[0]);
+            } else {
+                roles = null;
+            }
         }
     }
 
@@ -93,7 +95,7 @@ public class JWTService {
     }
 
     @Deprecated
-    public String extractUsername(String token) {
+    public String extractId(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -129,19 +131,19 @@ public class JWTService {
                 .getBody();
     }
 
-    public String generateAccessToken(UserDetails user) {
+    public String generateAccessToken(DetailsAppUserDTO user) {
         return generateToken(
-                user.getUsername(),
-                Map.of("roles", user.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
+                user.getId(),
+                Map.of("roles", user.getRoles().stream()
+                        .map(Role::getName)
                         .collect(Collectors.toList())
                 ),
                 TokenType.access
         );
     }
 
-    public String generateRefreshToken(UserDetails user) {
-        return generateToken(user.getUsername(), Collections.emptyMap(), TokenType.refresh);
+    public String generateRefreshToken(DetailsAppUserDTO user) {
+        return generateToken(user.getId(), Collections.emptyMap(), TokenType.refresh);
     }
 
     public String generateToken(

@@ -63,8 +63,21 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public <T> T getUserDto(String username, Class<T> dtoType) {
-        return modelMapper.map(loadAppUserByUsername(username), dtoType);
+    private AppUser loadAppUserByUserid(String userId) throws UsernameNotFoundException {
+        Objects.requireNonNull(userId, "user Id must not be null");
+
+        AppUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found in the database");
+        }
+
+        return user;
+    }
+
+    public <T> T getUserDto(String userId, Class<T> dtoType) {
+        return modelMapper.map(loadAppUserByUserid(userId), dtoType);
     }
 
     public String getUserid(String username) {
@@ -81,10 +94,10 @@ public class UserService implements UserDetailsService {
         return modelMapper.map(userRepository.save(user), DetailsAppUserDTO.class);
     }
 
-    public DetailsAppUserDTO updateUserProfile(UserProfileRequest userProfile, String username) {
+    public DetailsAppUserDTO updateUserProfile(UserProfileRequest userProfile, String userId) {
         Objects.requireNonNull(userProfile, "Profile must not be null");
-        Objects.requireNonNull(username, "Username must not be null");
-        AppUser user = loadAppUserByUsername(username);
+        Objects.requireNonNull(userId, "User id must not be null");
+        AppUser user = loadAppUserByUserid(userId);
         modelMapper.map(userProfile, user);
         return modelMapper.map(user, DetailsAppUserDTO.class);
     }

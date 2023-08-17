@@ -52,7 +52,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             JWTService.DecodedToken decodedToken = jwtService.decodeToken(token);
-            if (decodedToken.getUsername() == null || decodedToken.getRoles() == null) {
+            if (decodedToken.getUserId() == null || decodedToken.getRoles() == null) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -61,7 +61,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             Arrays.stream(decodedToken.getRoles()).forEach(role -> {
                 authorities.add(new SimpleGrantedAuthority(role));
             });
-            Authentication authenticationToken = new UsernamePasswordAuthenticationToken(decodedToken.getUsername(), null, authorities);
+            Authentication authenticationToken = new UsernamePasswordAuthenticationToken(decodedToken.getUserId(), null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         } catch (Exception e) {
             log.error(e.getMessage());
