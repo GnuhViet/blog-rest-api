@@ -30,13 +30,12 @@ public class AdminResource {
 
     @GetMapping("/users")
     @Operation(summary = "List user, Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<PagedResponse<SimpleAppUserDTO>> getAll(@Valid PaginationRequest request, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<PagedResponse<SimpleAppUserDTO>> getAll(@Valid PaginationRequest request) {
         return ResponseEntity.ok(
                 PaginationHelper.createPagedResponse(
                         request,
                         userService.getAllUsers(PaginationHelper.parsePagingRequest(request), SimpleAppUserDTO.class),
-                        userService.countUser(),
-                        httpServletRequest.getRequestURI()
+                        userService.countUser()
                 )
         );
     }

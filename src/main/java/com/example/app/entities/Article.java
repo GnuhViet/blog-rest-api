@@ -1,14 +1,14 @@
 package com.example.app.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -46,7 +46,8 @@ public class Article {
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private List<Category> categories;
+    private Set<Category> categories;
+    //https://stackoverflow.com/questions/73078524/java-lang-stackoverflowerror-while-saving-jpa-entities
 
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "article",

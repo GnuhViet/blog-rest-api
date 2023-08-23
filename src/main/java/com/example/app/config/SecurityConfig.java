@@ -60,7 +60,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests()
                 .requestMatchers(AUTH_WHITELIST).permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/v1/category").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/article").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/v1/article/**").permitAll()
                 .anyRequest().authenticated();
 
 

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PaginationHelper {
 
-    public static <T> PagedResponse<T> createPagedResponse(PaginationRequest request, List<T> pagedData, long totalRecord, String route) {
+    public static <T> PagedResponse<T> createPagedResponse(PaginationRequest request, List<T> pagedData, long totalRecord) {
         final int pageNumber = request.getPageNumber();
         final int pageSize = request.getPageSize();
         final int totalPages = Double.valueOf(Math.ceil((double) totalRecord / pageSize)).intValue();

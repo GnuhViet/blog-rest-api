@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostArticleRequest {
-    private String id;
     private String title;
     private String thumbnail;
     private String shortDescription;

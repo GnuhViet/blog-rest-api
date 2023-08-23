@@ -21,12 +21,12 @@ import java.util.Map;
 @ControllerAdvice
 public class AuthenticationExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(AuthenticationException.class)
-    protected ResponseEntity<Object> handleAuthentication(AuthenticationException ex) {
-        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED);
-        apiError.setMessage(ex.getMessage());
-        return RestExceptionHandler.buildResponseEntity(apiError);
-    }
+    // @ExceptionHandler(AuthenticationException.class)
+    // protected ResponseEntity<Object> handleAuthentication(AuthenticationException ex) {
+    //     ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED);
+    //     apiError.setMessage(ex.getMessage() + "custom");
+    //     return RestExceptionHandler.buildResponseEntity(apiError);
+    // }
 
     @ExceptionHandler(BadCredentialsException.class)
     protected ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex) {

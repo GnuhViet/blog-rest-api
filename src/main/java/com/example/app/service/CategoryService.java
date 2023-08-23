@@ -2,7 +2,7 @@ package com.example.app.service;
 
 import com.example.app.dto.category.CategoryDTO;
 import com.example.app.entities.Category;
-import com.example.app.exception.category.CategoryException;
+import com.example.app.exception.NotFoundException;
 import com.example.app.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +22,12 @@ public class CategoryService {
     private final ModelMapper modelMapper;
 
     public Category findById(String id) {
-        return categoryRepository.findById(id).orElseThrow(() -> new CategoryException("Wrong id ?"));
+        return categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("category id not found"));
     }
 
     public CategoryDTO save(String name) {
         if (categoryRepository.existsByName(name)) {
-            throw new CategoryException("This category is already exist");
+            throw new NotFoundException("This category is already exist");
         }
 
         return modelMapper.map(
@@ -38,11 +38,11 @@ public class CategoryService {
 
     public CategoryDTO update(CategoryDTO categoryDTO) {
         if (categoryRepository.existsByName(categoryDTO.getName())) {
-            throw new CategoryException("This category(name) is already exist");
+            throw new NotFoundException("This category(name) is already exist");
         }
 
         Category category = categoryRepository.findById(categoryDTO.getId())
-                .orElseThrow(() -> new CategoryException("Wrong id ?"));
+                .orElseThrow(() -> new NotFoundException("category id not found"));
 
         category.setName(categoryDTO.getName());
 
@@ -51,7 +51,7 @@ public class CategoryService {
 
     public void delete(String id) {
         if (!categoryRepository.existsById(id)) {
-            throw new CategoryException("Wrong id ?");
+            throw new NotFoundException("category id not found");
         }
         categoryRepository.deleteById(id);
     }
