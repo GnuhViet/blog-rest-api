@@ -34,6 +34,14 @@ public class ArticleService {
     private final UserService userService;
     private final ModelMapper modelMapper;
 
+    public Article getReferenceById(String id) {
+        return articleRepository.getReferenceById(id);
+    }
+
+    public boolean existById(String id) {
+        return articleRepository.existsById(id);
+    }
+
     public <T> List<T> getPagedArticle(Pageable page, Class<T> dtoType) {
         return articleRepository.findAll(page).getContent()
                 .stream()

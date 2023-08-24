@@ -80,6 +80,10 @@ public class UserService implements UserDetailsService {
         return modelMapper.map(loadAppUserByUserid(userId), dtoType);
     }
 
+    public boolean existById(String id) {
+        return userRepository.existsById(id);
+    }
+
     public String getUserid(String username) {
         return loadAppUserByUsername(username).getId();
     }

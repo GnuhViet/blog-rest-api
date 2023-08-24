@@ -1,13 +1,17 @@
 package com.example.app;
 
 import com.example.app.api.model.article.PostArticleRequest;
+import com.example.app.api.model.comment.CreateCommentRequest;
 import com.example.app.dto.appuser.DetailsAppUserDTO;
+import com.example.app.dto.article.DetailsArticleDTO;
 import com.example.app.dto.category.CategoryDTO;
 import com.example.app.entities.AppUser;
+import com.example.app.entities.Article;
 import com.example.app.entities.Category;
 import com.example.app.entities.Role;
 import com.example.app.service.ArticleService;
 import com.example.app.service.CategoryService;
+import com.example.app.service.CommentService;
 import com.example.app.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,11 +38,13 @@ public class Application {
     @Bean
     CommandLineRunner run(UserService userService,
                           CategoryService categoryService,
-                          ArticleService articleService
+                          ArticleService articleService,
+                          CommentService commentService
     ) {
         return args -> {
             List<DetailsAppUserDTO> user = new ArrayList<>();
             List<CategoryDTO> category = new ArrayList<>();
+            List<DetailsArticleDTO> articles = new ArrayList<>();
 
             userService.saveRole(new Role(null, "ROLE_USER"));
             userService.saveRole(new Role(null, "ROLE_ADMIN"));
@@ -64,7 +70,8 @@ public class Application {
             category.add(categoryService.save("Manga"));
             category.add(categoryService.save("Facts"));
 
-            articleService.createNew(
+
+            articles.add(articleService.createNew(
                     PostArticleRequest.builder()
                             .title("Bai viet 1")
                             .content("abcd")
@@ -72,9 +79,9 @@ public class Application {
                             .categoryIds(List.of(category.get(0).getId()))
                             .build(),
                     user.get(0).getId()
-            );
+            ));
 
-            articleService.createNew(
+            articles.add(articleService.createNew(
                     PostArticleRequest.builder()
                             .title("Bai viet 2")
                             .content("abcd")
@@ -82,14 +89,36 @@ public class Application {
                             .categoryIds(category.stream().map(CategoryDTO::getId).collect(Collectors.toList()))
                             .build(),
                     user.get(1).getId()
-            );
+            ));
 
-            articleService.createNew(
+            articles.add(articleService.createNew(
                     PostArticleRequest.builder()
                             .title("Hello world")
                             .content("abcd")
                             .shortDescription("descript")
                             .categoryIds(category.stream().map(CategoryDTO::getId).collect(Collectors.toList()))
+                            .build(),
+                    user.get(1).getId()
+            ));
+
+            commentService.createNew(
+                    CreateCommentRequest.builder()
+                            .articleId(articles.get(0).getId())
+                            .content("Comment 1")
+                            .build(),
+                    user.get(0).getId()
+            );
+            commentService.createNew(
+                    CreateCommentRequest.builder()
+                            .articleId(articles.get(0).getId())
+                            .content("Comment 2")
+                            .build(),
+                    user.get(0).getId()
+            );
+            commentService.createNew(
+                    CreateCommentRequest.builder()
+                            .articleId(articles.get(0).getId())
+                            .content("Comment 3")
                             .build(),
                     user.get(1).getId()
             );

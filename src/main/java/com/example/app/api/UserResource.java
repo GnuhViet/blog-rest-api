@@ -31,7 +31,7 @@ public class UserResource {
     }
 
     @PostMapping("/profile")
-    @Operation(summary = "User profile, Role: All", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "User profile edit, Role: All", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<DetailsAppUserDTO> editProfile(@RequestBody UserProfileRequest request, Principal principal) {
         return ResponseEntity.ok(
                 userService.updateUserProfile(request, principal.getName())
@@ -39,7 +39,7 @@ public class UserResource {
     }
 
     @PostMapping("/profile/change-password")
-    @Operation(summary = "User profile, Role: All", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "Change password, Role: All", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequest request, Principal principal) {
         authenticationService.changePassword(request, principal.getName());
         return ResponseEntity.noContent().build();

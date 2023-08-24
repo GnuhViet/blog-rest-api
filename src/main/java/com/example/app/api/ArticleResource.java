@@ -25,6 +25,7 @@ public class ArticleResource {
     private final ArticleService articleService;
 
     @GetMapping
+    @Operation(summary = "Get article(home page)")
     public ResponseEntity<PagedResponse<DetailsArticleDTO>> getPaging(@Valid PaginationRequest request
     ) {
         return ResponseEntity.ok(
@@ -46,6 +47,7 @@ public class ArticleResource {
     }
 
     @GetMapping("/search")
+    @Operation(summary = "Search articles, Role: All")
     public ResponseEntity<PagedResponse<DetailsArticleDTO>> searchPaging(
             @Valid PaginationRequest request,
             @RequestParam(required = false) String title
@@ -60,6 +62,7 @@ public class ArticleResource {
     }
 
     @GetMapping("/{articleId}")
+    @Operation(summary = "Article page, Role: All")
     public ResponseEntity<DetailsArticleResponse> articleDetails(@PathVariable String articleId) {
         return ResponseEntity.ok(
             articleService.findById(articleId)
@@ -79,7 +82,7 @@ public class ArticleResource {
     }
 
     @DeleteMapping("/{articleId}")
-    @Operation(summary = "Edit article, Role: all", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "Delete article, Role: all", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Void> articleDelete(@PathVariable String articleId, Principal principal) {
         articleService.delete(articleId, principal.getName());
         return ResponseEntity.noContent().build();

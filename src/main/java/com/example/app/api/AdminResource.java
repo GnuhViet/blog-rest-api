@@ -49,7 +49,7 @@ public class AdminResource {
     }
 
     @GetMapping("/users/{username}/article")
-    @Operation(summary = "Single user info, Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "User articles, Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<AppUserWithArticlesDTO> getUserArticle(@PathVariable String username) {
         return ResponseEntity.ok(
                 userService.getUserDto(username, AppUserWithArticlesDTO.class)
@@ -57,7 +57,7 @@ public class AdminResource {
     }
 
     @GetMapping("/users/{username}/comments")
-    @Operation(summary = "Single user info, Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "User comments, Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<AppUserWithCommentsDTO> getUserComments(@PathVariable String username) {
         return ResponseEntity.ok(
                 userService.getUserDto(username, AppUserWithCommentsDTO.class)

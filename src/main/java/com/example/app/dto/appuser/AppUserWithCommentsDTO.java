@@ -1,6 +1,6 @@
 package com.example.app.dto.appuser;
 
-import com.example.app.dto.comment.SimpleCommentDTO;
+import com.example.app.dto.comment.CommentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +15,5 @@ import java.util.List;
 @AllArgsConstructor
 public class AppUserWithCommentsDTO {
     private String username;
-    private List<SimpleCommentDTO> comments;
+    private List<CommentDTO> comments;
 }

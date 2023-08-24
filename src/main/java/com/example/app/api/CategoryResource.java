@@ -19,13 +19,14 @@ public class CategoryResource {
     private final CategoryService categoryService;
 
     @GetMapping
+    @Operation(summary = "Get all category, Role: All")
     public ResponseEntity<List<CategoryDTO>> getCategory() {
         return ResponseEntity.ok(categoryService.getAll());
     }
 
     @PostMapping
     @Secured(Constants.ROLE_ADMIN)
-    @Operation(summary = "User profile, Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "Create new category, Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Void> createCategory(@RequestBody String name) {
         categoryService.save(name);
         return ResponseEntity.noContent().build();
@@ -33,14 +34,14 @@ public class CategoryResource {
 
     @PutMapping
     @Secured(Constants.ROLE_ADMIN)
-    @Operation(summary = "User profile, Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "Update category (change name), Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<CategoryDTO> updateCategory(@RequestBody CategoryDTO category) {
         return ResponseEntity.ok(categoryService.update(category));
     }
 
     @DeleteMapping
     @Secured(Constants.ROLE_ADMIN)
-    @Operation(summary = "User profile, Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "Delete category (by id)", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Void> deleteCategory(@RequestBody String id) {
         categoryService.delete(id);
         return ResponseEntity.noContent().build();
