@@ -1,7 +1,7 @@
 package com.example.app.api.model.article;
 
-import com.example.app.dto.appuser.SimpleAppUserDTO;
-import com.example.app.dto.category.CategoryDTO;
+import com.example.app.dtos.appuser.SimpleAppUserDTO;
+import com.example.app.dtos.category.CategoryDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

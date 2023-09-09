@@ -1,7 +1,7 @@
 package com.example.app.service;
 
 import com.example.app.api.model.user.UserProfileRequest;
-import com.example.app.dto.appuser.DetailsAppUserDTO;
+import com.example.app.dtos.appuser.DetailsAppUserDTO;
 import com.example.app.entities.AppUser;
 import com.example.app.entities.Role;
 import com.example.app.repository.RoleRepository;

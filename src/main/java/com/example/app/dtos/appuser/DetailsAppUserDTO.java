@@ -1,4 +1,4 @@
-package com.example.app.dto.appuser;
+package com.example.app.dtos.appuser;
 
 import com.example.app.entities.Role;
 import lombok.AllArgsConstructor;

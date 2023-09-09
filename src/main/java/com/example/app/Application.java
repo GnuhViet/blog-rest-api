@@ -2,12 +2,10 @@ package com.example.app;
 
 import com.example.app.api.model.article.PostArticleRequest;
 import com.example.app.api.model.comment.CreateCommentRequest;
-import com.example.app.dto.appuser.DetailsAppUserDTO;
-import com.example.app.dto.article.DetailsArticleDTO;
-import com.example.app.dto.category.CategoryDTO;
+import com.example.app.dtos.appuser.DetailsAppUserDTO;
+import com.example.app.dtos.article.DetailsArticleDTO;
+import com.example.app.dtos.category.CategoryDTO;
 import com.example.app.entities.AppUser;
-import com.example.app.entities.Article;
-import com.example.app.entities.Category;
 import com.example.app.entities.Role;
 import com.example.app.service.ArticleService;
 import com.example.app.service.CategoryService;

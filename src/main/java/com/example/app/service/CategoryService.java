@@ -1,6 +1,6 @@
 package com.example.app.service;
 
-import com.example.app.dto.category.CategoryDTO;
+import com.example.app.dtos.category.CategoryDTO;
 import com.example.app.entities.Category;
 import com.example.app.exception.NotFoundException;
 import com.example.app.repository.CategoryRepository;

@@ -1,7 +1,6 @@
-package com.example.app.dto.appuser;
+package com.example.app.dtos.appuser;
 
-import com.example.app.dto.article.SimpleArticleDTO;
-import com.example.app.entities.Article;
+import com.example.app.dtos.article.SimpleArticleDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

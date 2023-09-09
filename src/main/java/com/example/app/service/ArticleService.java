@@ -2,9 +2,9 @@ package com.example.app.service;
 
 import com.example.app.api.model.article.DetailsArticleResponse;
 import com.example.app.api.model.article.PostArticleRequest;
-import com.example.app.dto.appuser.SimpleAppUserDTO;
-import com.example.app.dto.article.DetailsArticleDTO;
-import com.example.app.dto.category.CategoryDTO;
+import com.example.app.dtos.appuser.SimpleAppUserDTO;
+import com.example.app.dtos.article.DetailsArticleDTO;
+import com.example.app.dtos.category.CategoryDTO;
 import com.example.app.entities.Article;
 import com.example.app.entities.Category;
 import com.example.app.exception.NotFoundException;
@@ -17,7 +17,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.naming.AuthenticationException;
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.List;

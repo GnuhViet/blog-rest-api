@@ -1,8 +1,8 @@
 package com.example.app.service;
 
 import com.example.app.api.model.comment.CreateCommentRequest;
-import com.example.app.dto.appuser.SimpleAppUserDTO;
-import com.example.app.dto.comment.CommentDTO;
+import com.example.app.dtos.appuser.SimpleAppUserDTO;
+import com.example.app.dtos.comment.CommentDTO;
 import com.example.app.entities.AppUser;
 import com.example.app.entities.Article;
 import com.example.app.entities.Comment;

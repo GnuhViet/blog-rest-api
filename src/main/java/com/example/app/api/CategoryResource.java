@@ -1,7 +1,7 @@
 package com.example.app.api;
 
 import com.example.app.constants.Constants;
-import com.example.app.dto.category.CategoryDTO;
+import com.example.app.dtos.category.CategoryDTO;
 import com.example.app.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

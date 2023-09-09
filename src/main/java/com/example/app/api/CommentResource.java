@@ -1,7 +1,7 @@
 package com.example.app.api;
 
 import com.example.app.api.model.comment.CreateCommentRequest;
-import com.example.app.dto.comment.CommentDTO;
+import com.example.app.dtos.comment.CommentDTO;
 import com.example.app.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

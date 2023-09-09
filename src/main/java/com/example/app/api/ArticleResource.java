@@ -5,7 +5,7 @@ import com.example.app.api.model.article.DetailsArticleResponse;
 import com.example.app.api.model.article.PostArticleRequest;
 import com.example.app.api.model.paging.PagedResponse;
 import com.example.app.api.model.paging.PaginationRequest;
-import com.example.app.dto.article.DetailsArticleDTO;
+import com.example.app.dtos.article.DetailsArticleDTO;
 import com.example.app.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.AuthenticationException;
 import java.security.Principal;
 
 @RestController

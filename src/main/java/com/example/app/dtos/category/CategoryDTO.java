@@ -1,4 +1,4 @@
-package com.example.app.dto.article;
+package com.example.app.dtos.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SimpleArticleDTO {
+public class CategoryDTO {
     private String id;
-    private String title;
-    private String shortDescription;
+    private String name;
 }

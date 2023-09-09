@@ -1,8 +1,5 @@
-package com.example.app.dto.article;
+package com.example.app.dtos.article;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

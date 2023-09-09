@@ -1,6 +1,6 @@
 package com.example.app.service;
 
-import com.example.app.dto.appuser.DetailsAppUserDTO;
+import com.example.app.dtos.appuser.DetailsAppUserDTO;
 import com.example.app.entities.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,6 +1,6 @@
-package com.example.app.dto.appuser;
+package com.example.app.dtos.appuser;
 
-import com.example.app.dto.comment.CommentDTO;
+import com.example.app.dtos.comment.CommentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
