@@ -1,9 +1,12 @@
 package com.example.app.service;
 
 import com.example.app.api.model.user.UserProfileRequest;
+import com.example.app.constants.Constants;
 import com.example.app.dtos.appuser.DetailsAppUserDTO;
 import com.example.app.entities.AppUser;
 import com.example.app.entities.Role;
+import com.example.app.exception.EmptyRequestBodyException;
+import com.example.app.exception.user.UserAlreadyHaveRoleException;
 import com.example.app.repository.RoleRepository;
 import com.example.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -121,6 +124,19 @@ public class UserService implements UserDetailsService {
         return roleRepository.save(role);
     }
 
+    public void setAdminRoleToUsers(List<String> usernames) {
+        if (usernames.isEmpty()) {
+            throw new EmptyRequestBodyException("users is empty");
+        }
+
+        usernames.forEach(u -> {
+            if (!existByUsername(u)) {
+                throw new UsernameNotFoundException("User: " + u +" not found");
+            }
+            addRoleToUser(u, Constants.ROLE_ADMIN);
+        });
+    }
+
     public void addRoleToUser(String username, String roleName) {
         Objects.requireNonNull(username, "Username must not be null");
         Objects.requireNonNull(roleName, "Role name must not be null");
@@ -129,10 +145,15 @@ public class UserService implements UserDetailsService {
         AppUser user = loadAppUserByUsername(username);
         Role role = roleRepository.findByName(roleName).orElseThrow();
 
-        if (user.getRoles() == null) {
+        if (user.getRoles() != null) {
+            if (user.getRoles().contains(role)) {
+                throw new UserAlreadyHaveRoleException(username + " already have the role: " + roleName);
+            }
+            user.getRoles().add(role);
+        } else {
             user.setRoles(new ArrayList<>());
+            user.getRoles().add(role);
         }
-        user.getRoles().add(role);
     }
 
     public List<DetailsAppUserDTO> getAllUsers() {

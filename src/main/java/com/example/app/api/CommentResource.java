@@ -44,7 +44,7 @@ public class CommentResource {
 
     @DeleteMapping("/{commentId}")
     @Operation(summary = "Create new comment, Role: All", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<Void> createNewComment( @PathVariable String commentId, Principal principal) {
+    public ResponseEntity<Void> createNewComment(@PathVariable String commentId, Principal principal) {
         commentService.delete(commentId, principal.getName());
         return ResponseEntity.noContent().build();
     }

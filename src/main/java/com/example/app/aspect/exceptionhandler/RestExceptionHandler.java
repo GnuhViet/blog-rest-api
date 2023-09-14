@@ -2,6 +2,7 @@ package com.example.app.aspect.exceptionhandler;
 
 import com.example.app.api.model.error.ApiError;
 import com.example.app.api.model.error.ApiValidationError;
+import com.example.app.exception.EmptyRequestBodyException;
 import com.example.app.exception.NotFoundException;
 import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.core.Ordered;
@@ -43,7 +44,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    protected ResponseEntity<Object> handleCategoryException(NotFoundException ex) {
+    protected ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
+        apiError.setMessage(ex.getMessage());
+        return RestExceptionHandler.buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(EmptyRequestBodyException.class)
+    protected ResponseEntity<Object> handleEmptyRequestBodyException(EmptyRequestBodyException ex) {
         ApiError apiError = new ApiError(HttpStatus.CONFLICT);
         apiError.setMessage(ex.getMessage());
         return RestExceptionHandler.buildResponseEntity(apiError);

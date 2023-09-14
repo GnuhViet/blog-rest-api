@@ -21,13 +21,13 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@Secured(Constants.ROLE_ADMIN)
 @RequestMapping("/api/v1/admin")
 @RequiredArgsConstructor
 public class AdminResource {
     private final UserService userService;
 
     @GetMapping("/users")
+    @Secured(Constants.ROLE_ADMIN)
     @Operation(summary = "List user, Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<PagedResponse<SimpleAppUserDTO>> getAll(@Valid PaginationRequest request) {
         return ResponseEntity.ok(
@@ -39,15 +39,16 @@ public class AdminResource {
         );
     }
 
-    @GetMapping("/users/{username}")
+    @GetMapping("/users/{userId}")
     @Operation(summary = "Single user info, Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<DetailsAppUserDTO> getSingle(@PathVariable String username) {
+    public ResponseEntity<DetailsAppUserDTO> getSingle(@PathVariable String userId) {
         return ResponseEntity.ok(
-                userService.getUserDto(username, DetailsAppUserDTO.class)
+                userService.getUserDto(userId, DetailsAppUserDTO.class)
         );
     }
 
     @GetMapping("/users/{username}/article")
+    @Secured(Constants.ROLE_ADMIN)
     @Operation(summary = "User articles, Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<AppUserWithArticlesDTO> getUserArticle(@PathVariable String username) {
         return ResponseEntity.ok(
@@ -56,6 +57,7 @@ public class AdminResource {
     }
 
     @GetMapping("/users/{username}/comments")
+    @Secured(Constants.ROLE_ADMIN)
     @Operation(summary = "User comments, Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<AppUserWithCommentsDTO> getUserComments(@PathVariable String username) {
         return ResponseEntity.ok(
@@ -64,12 +66,10 @@ public class AdminResource {
     }
 
     @PutMapping("/users/set-admin")
+    @Secured(Constants.ROLE_ADMIN)
     @Operation(summary = "Set role admin, Role: Admin", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<Void> setAdmin(@RequestBody Map<String, List<String>> users) {
-        if (users.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        users.get("username").forEach(user -> userService.addRoleToUser(user, Constants.ROLE_ADMIN));
+    public ResponseEntity<Void> setAdmin(@RequestBody List<String> usernames) {
+        userService.setAdminRoleToUsers(usernames);
         return ResponseEntity.noContent().build();
     }
 }

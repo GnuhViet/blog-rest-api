@@ -3,10 +3,10 @@ package com.example.app.exception;
 import lombok.Getter;
 
 @Getter
-public class NotFoundException extends RuntimeException{
+public class EmptyRequestBodyException extends RuntimeException{
     private final String message;
 
-    public NotFoundException(String message) {
+    public EmptyRequestBodyException(String message) {
         this.message = message;
     }
 }
