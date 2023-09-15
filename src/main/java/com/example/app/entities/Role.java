@@ -10,6 +10,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 public class Role {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
