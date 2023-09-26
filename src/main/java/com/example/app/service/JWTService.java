@@ -9,6 +9,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,17 +22,24 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class JWTService {
-    @Value("${app.jwt-secret}")
     private String INJECTED_SECRET_KEY;
-
-    @Value("${app.jwt-expiration-ms}")
     private int JWT_EXPIRATION_MS;
-
-    @Value("${app.jwt-refresh-expiration-ms}")
     private int JWT_REFRESH_EXPIRATION_MS;
-
-    @Value("${app.name}")
     private String ISSUER;
+
+    @Autowired
+    public JWTService(
+            @Value("${app.jwt-secret}") String INJECTED_SECRET_KEY,
+            @Value("${app.jwt-expiration-ms}") int JWT_EXPIRATION_MS,
+            @Value("${app.jwt-refresh-expiration-ms}") int JWT_REFRESH_EXPIRATION_MS,
+            @Value("${app.name}") String ISSUER
+    ) {
+        this.INJECTED_SECRET_KEY = INJECTED_SECRET_KEY;
+        this.JWT_EXPIRATION_MS = JWT_EXPIRATION_MS;
+        this.JWT_REFRESH_EXPIRATION_MS = JWT_REFRESH_EXPIRATION_MS;
+        this.ISSUER = ISSUER;
+    }
+
 
     public enum TokenType {
         access,
