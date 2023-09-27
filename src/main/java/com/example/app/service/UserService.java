@@ -137,7 +137,7 @@ public class UserService implements UserDetailsService {
         });
     }
 
-    public void addRoleToUser(String username, String roleName) {
+    public DetailsAppUserDTO addRoleToUser(String username, String roleName) {
         Objects.requireNonNull(username, "Username must not be null");
         Objects.requireNonNull(roleName, "Role name must not be null");
 
@@ -154,6 +154,8 @@ public class UserService implements UserDetailsService {
             user.setRoles(new ArrayList<>());
             user.getRoles().add(role);
         }
+
+        return modelMapper.map(user, DetailsAppUserDTO.class);
     }
 
     public List<DetailsAppUserDTO> getAllUsers() {
