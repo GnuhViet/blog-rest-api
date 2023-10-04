@@ -28,7 +28,7 @@ public class UserResource {
         );
     }
 
-    @PostMapping("/profile")
+    @PutMapping("/profile")
     @Operation(summary = "User profile edit, Role: All", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<DetailsAppUserDTO> editProfile(@RequestBody UserProfileRequest request, Principal principal) {
         return ResponseEntity.ok(

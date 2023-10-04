@@ -124,8 +124,7 @@ public class ArticleService {
         return res;
     }
 
-    public DetailsArticleResponse update(String id, PostArticleRequest request, String appUserId)
-    {
+    public DetailsArticleResponse update(String id, PostArticleRequest request, String appUserId) {
         Article article = articleRepository.findById(id).orElseThrow(() -> new NotFoundException("Article id not found"));
         if (!appUserId.equals(article.getAppUser().getId())) {
             throw new BadCredentialsException("access denied");

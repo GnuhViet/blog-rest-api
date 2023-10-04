@@ -25,8 +25,7 @@ public class ArticleResource {
 
     @GetMapping
     @Operation(summary = "Get article(home page)")
-    public ResponseEntity<PagedResponse<DetailsArticleDTO>> getPaging(@Valid PaginationRequest request
-    ) {
+    public ResponseEntity<PagedResponse<DetailsArticleDTO>> getPaging(@Valid PaginationRequest request) {
         return ResponseEntity.ok(
                 PaginationHelper.createPagedResponse(
                         request,
