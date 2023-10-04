@@ -56,7 +56,7 @@ public class CommentService {
     }
 
     public List<CommentDTO> getCommentsByArticleId(String id) {
-        if (!articleService.existById(id)) {
+        if (articleService.existById(id)) {
             throw new NotFoundException("Article id not found");
         }
 

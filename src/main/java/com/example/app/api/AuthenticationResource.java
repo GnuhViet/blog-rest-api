@@ -37,7 +37,7 @@ public class AuthenticationResource {
 
     @PostMapping("/refresh")
     @Operation(summary = "refresh jwt token , Role: All")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody RefreshRequest request) {
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody RefreshRequest request) {
         return ResponseEntity.ok(authenticationService.refreshToken(request));
     }
 }

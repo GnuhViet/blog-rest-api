@@ -4,6 +4,7 @@ import com.example.app.api.model.article.DetailsArticleResponse;
 import com.example.app.api.model.article.PostArticleRequest;
 import com.example.app.dtos.appuser.SimpleAppUserDTO;
 import com.example.app.dtos.article.DetailsArticleDTO;
+import com.example.app.dtos.article.PagedDetailsArticleDTO;
 import com.example.app.dtos.category.CategoryDTO;
 import com.example.app.entities.Article;
 import com.example.app.entities.Category;
@@ -12,12 +13,14 @@ import com.example.app.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +35,21 @@ public class ArticleService {
     private final CategoryService categoryService;
     private final UserService userService;
     private final ModelMapper modelMapper;
+
+    private List<DetailsArticleDTO> articleToDetailsArticleDTOList(List<Article> articles) {
+        return articles.stream()
+                .map(article -> {
+                    DetailsArticleDTO dto = modelMapper.map(article, DetailsArticleDTO.class);
+                    dto.setAuthorId(article.getAppUser().getId());
+                    dto.setCategoryIds(article.getCategories()
+                            .stream()
+                            .map(Category::getId)
+                            .collect(Collectors.toList())
+                    );
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 
     public Article getReferenceById(String id) {
         return articleRepository.getReferenceById(id);
@@ -49,39 +67,46 @@ public class ArticleService {
     }
 
     public List<DetailsArticleDTO> getPagedArticle(Pageable page) {
-        return articleRepository.findAll(page).getContent()
-                .stream()
-                .map(article -> {
-                    DetailsArticleDTO dto = modelMapper.map(article, DetailsArticleDTO.class);
-                    dto.setAuthorId(article.getAppUser().getId());
-                    dto.setCategoryIds(article.getCategories()
-                            .stream()
-                            .map(Category::getId)
-                            .collect(Collectors.toList())
-                    );
-                    return dto;
-                })
-                .collect(Collectors.toList());
+        return articleToDetailsArticleDTOList(articleRepository.findAll(page).getContent());
     }
 
-    public List<DetailsArticleDTO> searchArticleByTitle(String title, Pageable page) {
-        if (title == null || title.isEmpty()) {
-            return getPagedArticle(page);
+    public PagedDetailsArticleDTO searchArticleByTitle(String title, String categoryId, Pageable page) {
+        boolean findByCategory = title == null && categoryId != null;
+        boolean findByTitle = title != null && categoryId == null;
+        boolean findByTitleAndCategory = title != null && categoryId != null;
+
+        if (findByCategory) {
+            Page<Article> res = articleRepository.findArticleByCategory(categoryId, page);
+            return PagedDetailsArticleDTO.builder()
+                    .detailsArticleDTOs(articleToDetailsArticleDTOList(res.getContent()))
+                    .totalRecords(res.getTotalElements())
+                    .build();
         }
 
-        return articleRepository.findArticleByTitle(title.toLowerCase(Locale.ROOT), page).getContent()
-                .stream()
-                .map(article -> {
-                    DetailsArticleDTO dto = modelMapper.map(article, DetailsArticleDTO.class);
-                    dto.setAuthorId(article.getAppUser().getId());
-                    dto.setCategoryIds(article.getCategories()
-                            .stream()
-                            .map(Category::getId)
-                            .collect(Collectors.toList())
-                    );
-                    return dto;
-                })
-                .collect(Collectors.toList());
+        if (findByTitle) {
+            Page<Article> res = articleRepository.findArticleByTitle(title.toLowerCase(Locale.ROOT), page);
+            return PagedDetailsArticleDTO.builder()
+                    .detailsArticleDTOs(articleToDetailsArticleDTOList(res.getContent()))
+                    .totalRecords(res.getTotalElements())
+                    .build();
+        }
+
+        if (findByTitleAndCategory) {
+            Page<Article> res = articleRepository.findArticleByTitleAndCategory(
+                    title.toLowerCase(Locale.ROOT),
+                    categoryId,
+                    page
+            );
+            return PagedDetailsArticleDTO.builder()
+                    .detailsArticleDTOs(articleToDetailsArticleDTOList(res.getContent()))
+                    .totalRecords(res.getTotalElements())
+                    .build();
+        }
+
+        return PagedDetailsArticleDTO.builder()
+                .detailsArticleDTOs(getPagedArticle(page))
+                .totalRecords(countArticle())
+                .build();
     }
 
     public long countArticle() {

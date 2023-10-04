@@ -6,6 +6,7 @@ import com.example.app.api.model.article.PostArticleRequest;
 import com.example.app.api.model.paging.PagedResponse;
 import com.example.app.api.model.paging.PaginationRequest;
 import com.example.app.dtos.article.DetailsArticleDTO;
+import com.example.app.dtos.article.PagedDetailsArticleDTO;
 import com.example.app.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -48,13 +49,16 @@ public class ArticleResource {
     @Operation(summary = "Search articles, Role: All")
     public ResponseEntity<PagedResponse<DetailsArticleDTO>> searchPaging(
             @Valid PaginationRequest request,
-            @RequestParam(required = false) String title
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String categoryId
     ) {
+        PagedDetailsArticleDTO result = articleService.searchArticleByTitle(title, categoryId, PaginationHelper.parsePagingRequest(request));
+
         return ResponseEntity.ok(
                 PaginationHelper.createPagedResponse(
                         request,
-                        articleService.searchArticleByTitle(title, PaginationHelper.parsePagingRequest(request)),
-                        articleService.countArticle()
+                        result.getDetailsArticleDTOs(),
+                        result.getTotalRecords()
                 )
         );
     }
