@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://34.81.26.119:3306/blog-rest-api
-    username: rickrolled
-    password: ;v'*4b)h)%StZ)Q+
+    url: jdbc:mysql://localhost:3306/blog-rest-api
+    username: {DB_USERNAME}
+    password: {DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
